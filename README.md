@@ -39,7 +39,7 @@ The Weather Information App is a JavaFX application that allows users to retriev
 1.  **Clone the Repository:**
 
     ```bash
-    git clone '[https://github.com/UnicornRidingUnicorn/weatherapp]'
+    git clone https://github.com/UnicornRidingUnicorn/weatherapp
     cd weatherapp
     ```
 
