@@ -1,35 +1,40 @@
-.root {
-    -fx-background-color: black; /* Set the background color of the root */
+/*
+ * styles.css
+ *
+ * This file contains the CSS styles for the Weather Information App.
+ * It defines the look and feel of the application's UI elements.
+ */
+
+ .root {
+    -fx-background-color: black; /* Set the background color of the root to black */
 }
 
 .weather-label {
-    -fx-font-size: 16px;
-    -fx-text-fill: white;
+    -fx-font-size: 16px; /* Set the font size for weather labels */
+    -fx-text-fill: white; /* Set the text color for weather labels to white */
 }
 
 .weather-info-vbox {
-    -fx-padding: 10px;
-    -fx-spacing: 10px;
-    -fx-alignment: center;
-    -fx-background-color: rgba(0, 0, 0, 0.5); /* Add a semi-transparent background */
-    -fx-background-radius: 10px; /* Add rounded corners */
+    -fx-padding: 10px; /* Add padding around the weather info box */
+    -fx-spacing: 10px; /* Add spacing between elements in the weather info box */
+    -fx-alignment: center; /* Center the elements in the weather info box */
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* Add a semi-transparent black background */
+    -fx-background-radius: 10px; /* Add rounded corners to the weather info box */
 }
 
 .location-input {
-    -fx-text-fill: black; /* ensures search box text is visible */
+    -fx-text-fill: black; /* Ensure search box text is visible in black */
 }
 
-.unit-combo-box{
-    -fx-text-fill: black;
+.unit-combo-box {
+    -fx-text-fill: black; /* Ensure unit combo box text is visible in black */
 }
 
-.forecast-label{
-    -fx-text-fill: black; /* change from white to black for results box */
+.forecast-label {
+    -fx-text-fill: black; /* Change forecast label text color to black */
 }
 
 .location-label {
-    -fx-text-fill: white; /* switch to white if background is black */
-    -fx-font-size: 16px;
+    -fx-text-fill: white; /* Set location label text color to white */
+    -fx-font-size: 16px; /* Set the font size for the location label */
 }
-
-

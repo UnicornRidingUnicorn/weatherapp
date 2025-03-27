@@ -18,19 +18,54 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * WeatherService handles the communication with the OpenWeatherMap API to
+ * fetch current weather and forecast data.
+ */
 public class WeatherService {
 
     private static final Logger LOGGER = Logger.getLogger(WeatherService.class.getName());
-    private static final String API_KEY = "e7ac83aaf45de1f6d7457e7b7bd0cff9"; // Replace with your actual API key
+
+    /**
+     * The API key for accessing the OpenWeatherMap API. Replace with your
+     * actual API key.
+     */
+    private static final String API_KEY = "e7ac83aaf45de1f6d7457e7b7bd0cff9";
+
+    /**
+     * The base URL for fetching current weather data.
+     */
     private static final String CURRENT_WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q={location}&appid={apiKey}";
+
+    /**
+     * The base URL for fetching forecast data.
+     */
     private static final String FORECAST_URL = "http://api.openweathermap.org/data/2.5/forecast?q={location}&appid={apiKey}";
 
-    // Added a method to get the current time, correctly localized to New York
-    // This is used for the DALL-E prompt and to avoid timezone issues.
+    /**
+     * The time zone ID for New York.
+     */
+    private static final String NEW_YORK_TIME_ZONE = "America/New_York";
+
+    /**
+     * Gets the current time in New York.
+     *
+     * @return The current time in New York.
+     */
     public static ZonedDateTime getCurrentTimeInNewYork() {
-        return ZonedDateTime.now(ZoneId.of("America/New_York"));
+        return ZonedDateTime.now(ZoneId.of(NEW_YORK_TIME_ZONE));
     }
 
+    /**
+     * Retrieves the current weather data for the specified location.
+     *
+     * @param location The location (city name or ZIP code) to fetch weather
+     *                 data for.
+     * @return A WeatherData object containing the current weather information,
+     *         or null if the location is not found.
+     * @throws IOException If there is an error during the HTTP request or
+     *                     processing the response.
+     */
     public WeatherData getCurrentWeather(String location) throws IOException {
         // URL-encode the location
         String encodedLocation = URLEncoder.encode(location, StandardCharsets.UTF_8);
@@ -44,8 +79,10 @@ public class WeatherService {
                     LOGGER.warning("Location not found: " + location);
                     return null; // Return null for 404
                 } else if (statusCode == 401) {
-                    LOGGER.severe("Failed to fetch current weather.  HTTP Status Code: " + statusCode + " Check your API key.");
-                    throw new IOException("Failed to fetch current weather. HTTP Status Code: " + statusCode + " Check your API key.");
+                    LOGGER.severe("Failed to fetch current weather.  HTTP Status Code: " + statusCode
+                            + " Check your API key.");
+                    throw new IOException("Failed to fetch current weather. HTTP Status Code: " + statusCode
+                            + " Check your API key.");
                 } else if (statusCode != 200) {
                     LOGGER.severe("Failed to fetch current weather.  HTTP Status Code: " + statusCode);
                     throw new IOException("Failed to fetch current weather. HTTP Status Code: " + statusCode);
@@ -68,7 +105,6 @@ public class WeatherService {
                 int humidity = json.getJSONObject("main").getInt("humidity");
                 double windSpeedMps = json.getJSONObject("wind").getDouble("speed");
 
-
                 return new WeatherData(temperatureKelvin, conditions, iconCode, humidity, windSpeedMps);
             });
         } catch (IOException e) {
@@ -77,6 +113,16 @@ public class WeatherService {
         }
     }
 
+    /**
+     * Retrieves the weather forecast for the specified location.
+     *
+     * @param location The location (city name or ZIP code) to fetch the
+     *                 forecast for.
+     * @return A list of ForecastData objects containing the forecast
+     *         information, or null if the location is not found.
+     * @throws IOException If there is an error during the HTTP request or
+     *                     processing the response.
+     */
     public List<ForecastData> getForecast(String location) throws IOException {
         // URL-encode the location
         String encodedLocation = URLEncoder.encode(location, StandardCharsets.UTF_8);
@@ -91,8 +137,10 @@ public class WeatherService {
                     LOGGER.warning("Location not found for forecast: " + location);
                     return null; // Return null for 404.
                 } else if (statusCode == 401) {
-                    LOGGER.severe("Failed to fetch forecast. HTTP Status Code: " + statusCode + " Check your API key.");
-                    throw new IOException("Failed to fetch forecast. HTTP Status Code: " + statusCode + " Check your API key.");
+                    LOGGER.severe("Failed to fetch forecast. HTTP Status Code: " + statusCode
+                            + " Check your API key.");
+                    throw new IOException("Failed to fetch forecast. HTTP Status Code: " + statusCode
+                            + " Check your API key.");
                 } else if (statusCode != 200) {
                     LOGGER.severe("Failed to fetch forecast. HTTP Status Code: " + statusCode);
                     throw new IOException("Failed to fetch forecast. HTTP Status Code: " + statusCode);
@@ -120,7 +168,6 @@ public class WeatherService {
                     forecastList.add(new ForecastData(time, temperatureKelvin, conditions));
                 }
                 return forecastList;
-
             });
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error during getForecast: " + e.getMessage(), e);

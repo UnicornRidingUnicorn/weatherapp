@@ -22,6 +22,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * WeatherApp is a JavaFX application that displays current weather conditions and forecasts
+ * for a specified location. It uses the OpenWeatherMap API to fetch weather data.
+ *
+ * @author Rusty Lockett
+ */
 public class WeatherApp extends Application {
 
     private static final Logger LOGGER = Logger.getLogger(WeatherApp.class.getName());
@@ -34,7 +40,6 @@ public class WeatherApp extends Application {
     private static final String SUNRISE_IMAGE_PATH = "/sunrise.png";
     private static final String SUNSET_IMAGE_PATH = "/sunset.png";
     private static final String NIGHT_IMAGE_PATH = "/night.png";
-    private static final String LOCATION_PROMPT_TEXT = "Enter city/zip";
 
     // Constants for time ranges (in hours)
     private static final int SUNRISE_START_HOUR = 6;
@@ -52,8 +57,13 @@ public class WeatherApp extends Application {
     private final ListView<String> historyListView = new ListView<>();
     private final ObservableList<String> searchHistory = FXCollections.observableArrayList();
     private final VBox forecastVBox = new VBox(5);
-    private final VBox weatherInfoVBox = new VBox(10); // Reverted to a single VBox
+    private final VBox weatherInfoVBox = new VBox(10);
 
+    /**
+     * Starts the JavaFX application.
+     *
+     * @param primaryStage The primary stage for this application.
+     */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Weather Information App");
@@ -73,16 +83,20 @@ public class WeatherApp extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Creates the main layout of the application.
+     *
+     * @return The root BorderPane of the application.
+     */
     private BorderPane createRootLayout() {
         BorderPane root = new BorderPane();
-        root.setPadding(new Insets(10)); 
+        root.setPadding(new Insets(10));
 
         TitledPane searchPane = new TitledPane("Search", createInputHBox());
         searchPane.setCollapsible(false);
 
         VBox weatherInfoBox = createWeatherInfoVBox();
 
-        // Fix Results pane to a static width & height
         TitledPane resultsPane = new TitledPane("Results", createForecastScrollPane());
         resultsPane.setCollapsible(false);
         resultsPane.setPrefSize(350, 220);
@@ -101,14 +115,17 @@ public class WeatherApp extends Application {
         return root;
     }
 
+    /**
+     * Creates the input area for location search.
+     *
+     * @return The HBox containing the location input and search button.
+     */
     private HBox createInputHBox() {
         Label locationLabel = new Label("City or State:");
         locationLabel.getStyleClass().add("location-label");
 
-        TextField locationInput = new TextField(); 
+        TextField locationInput = new TextField();
         locationInput.getStyleClass().add("location-input");
-        // Remove the prompt text if you only want the label, e.g.:
-        // locationInput.setPromptText(null);
 
         Button searchButton = new Button("Search");
         searchButton.setOnAction(event -> fetchWeatherData(locationInput.getText()));
@@ -121,6 +138,11 @@ public class WeatherApp extends Application {
         return inputHBox;
     }
 
+    /**
+     * Creates the VBox for displaying weather information.
+     *
+     * @return The VBox containing weather information labels and unit selection.
+     */
     private VBox createWeatherInfoVBox() {
         weatherInfoVBox.setAlignment(Pos.CENTER);
         weatherInfoVBox.getStyleClass().add("weather-info-vbox");
@@ -140,18 +162,28 @@ public class WeatherApp extends Application {
         return weatherInfoVBox;
     }
 
+    /**
+     * Creates the scrollable pane for displaying the forecast.
+     *
+     * @return The ScrollPane containing the forecast information.
+     */
     private ScrollPane createForecastScrollPane() {
         forecastVBox.setAlignment(Pos.CENTER_LEFT);
-        forecastVBox.setPrefHeight(200); // Fixed height for scroll
+        forecastVBox.setPrefHeight(200); 
         ScrollPane forecastScrollPane = new ScrollPane(forecastVBox);
         forecastScrollPane.setFitToWidth(true);
         return forecastScrollPane;
     }
 
+    /**
+     * Creates the list view for displaying search history.
+     *
+     * @return The ListView containing the search history.
+     */
     private ListView<String> createHistoryListView() {
         historyListView.setItems(searchHistory);
         historyListView.setPrefWidth(200);
-        historyListView.setPrefHeight(200); // Fixed height for scroll
+        historyListView.setPrefHeight(200); 
         historyListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 String selectedLocation = newVal.split(" \\(")[0];
@@ -161,6 +193,11 @@ public class WeatherApp extends Application {
         return historyListView;
     }
 
+    /**
+     * Fetches weather data for the given location.
+     *
+     * @param location The location to fetch weather data for.
+     */
     private void fetchWeatherData(String location) {
         if (location == null || location.trim().isEmpty()) {
             showAlert(ERROR_TITLE, "Please enter a location.");
@@ -212,11 +249,22 @@ public class WeatherApp extends Application {
         new Thread(forecastTask).start();
     }
 
+    /**
+     * Handles task failures by logging the error and showing an alert.
+     *
+     * @param taskName  The name of the task that failed.
+     * @param exception The exception that occurred.
+     */
     private void handleTaskFailure(String taskName, Throwable exception) {
         LOGGER.log(Level.SEVERE, exception, () -> "Error in " + taskName + " task");
         showAlert(ERROR_TITLE, "Failed to fetch " + taskName + ": " + getErrorMessage(exception));
     }
 
+    /**
+     * Adds a location to the search history.
+     *
+     * @param location The location to add to the history.
+     */
     private void addToHistory(String location) {
         ZonedDateTime now = ZonedDateTime.now();
         String formattedDateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -232,6 +280,11 @@ public class WeatherApp extends Application {
         });
     }
 
+    /**
+     * Updates the weather display with the given weather data.
+     *
+     * @param data The weather data to display.
+     */
     private void updateWeatherDisplay(WeatherData data) {
         String iconUrl = "https://openweathermap.org/img/wn/" + data.getIconCode() + "@2x.png";
         Image newIcon = new Image(iconUrl, true);
@@ -259,6 +312,11 @@ public class WeatherApp extends Application {
         });
     }
 
+    /**
+     * Updates the forecast display with the given forecast data.
+     *
+     * @param forecast The forecast data to display.
+     */
     private void updateForecastDisplay(List<ForecastData> forecast) {
         Platform.runLater(() -> {
             forecastVBox.getChildren().clear();
@@ -282,6 +340,9 @@ public class WeatherApp extends Application {
         });
     }
 
+    /**
+     * Updates the displayed units based on the selected unit in the combo box.
+     */
     private void updateDisplayedUnits() {
         String selectedLocation = null;
         if (!searchHistory.isEmpty()) {
@@ -293,6 +354,9 @@ public class WeatherApp extends Application {
         }
     }
 
+    /**
+     * Updates the background image based on the current time.
+     */
     private void updateBackgroundImage() {
         ZonedDateTime now = WeatherService.getCurrentTimeInNewYork();
         int hour = now.getHour();
@@ -309,6 +373,11 @@ public class WeatherApp extends Application {
         loadImage(imagePath);
     }
 
+    /**
+     * Loads an image from the given path and sets it as the background.
+     *
+     * @param imagePath The path to the image resource.
+     */
     private void loadImage(String imagePath) {
         try {
             URL resourceUrl = getClass().getResource(imagePath);
@@ -325,10 +394,19 @@ public class WeatherApp extends Application {
         }
     }
 
+    /**
+     * Loads the default background image.
+     */
     private void loadDefaultBackground() {
         loadImage(DEFAULT_BACKGROUND_PATH);
     }
 
+    /**
+     * Gets a user-friendly error message from an exception.
+     *
+     * @param t The exception to get the error message from.
+     * @return A user-friendly error message.
+     */
     private String getErrorMessage(Throwable t) {
         if (t instanceof IOException) {
             return "Network error. Please check your internet connection.";
@@ -339,6 +417,12 @@ public class WeatherApp extends Application {
         }
     }
 
+    /**
+     * Shows an alert dialog with the given title and message.
+     *
+     * @param title   The title of the alert.
+     * @param message The message to display in the alert.
+     */
     private void showAlert(String title, String message) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -349,6 +433,11 @@ public class WeatherApp extends Application {
         });
     }
 
+    /**
+     * Main method to launch the application.
+     *
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         launch(args);
     }
