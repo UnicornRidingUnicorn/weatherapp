@@ -75,22 +75,22 @@ weatherapp/
     ├── pom.xml # Maven project configuration 
     ├── README.md # This file (project description) 
     ├── LICENSE.md # MIT License 
-        └── src/ 
-            └── main/ 
-                ├── java/ 
-                    │ └── com/ 
-                        │ └── example/ 
-                            │ └── weatherapp/ 
-                            │ ├── ForecastData.java # Data class for forecast information 
-                            │ ├── WeatherApp.java # Main application class 
-                            │ ├── WeatherData.java # Data class for current weather 
-                            │ └── WeatherService.java # Handles API requests 
-                    └── resources/ 
-                        ├── default_background.png # Default background image 
-                        ├── night.png # Night background image 
-                        ├── sunrise.png # Sunrise background image 
-                        ├── sunset.png # Sunset background image 
-                        └── styles.css # CSS for styling the UI
+    └── src/ 
+        └── main/ 
+            ├── java/ 
+            │ └── com/ 
+                │ └── example/ 
+                    │ └── weatherapp/ 
+                        │ ├── ForecastData.java # Data class for forecast information 
+                        │ ├── WeatherApp.java # Main application class 
+                        │ ├── WeatherData.java # Data class for current weather 
+                        │ └── WeatherService.java # Handles API requests 
+            └── resources/ 
+                ├── default_background.png # Default background image 
+                ├── night.png # Night background image 
+                ├── sunrise.png # Sunrise background image 
+                ├── sunset.png # Sunset background image 
+                └── styles.css # CSS for styling the UI
 
 ## License
 
@@ -116,147 +116,3 @@ The JavaFX community for creating a powerful UI framework.
 The Apache Software Foundation for the HttpClient library.
 The Gson and JSON libraries.
 The SLF4J and Logback libraries.
-
-## `styles.css`
-
-```css
-.root {
-    -fx-background-color: black; /* Set the background color of the root */
-}
-
-.weather-label {
-    -fx-font-size: 16px;
-    -fx-text-fill: white;
-}
-
-.weather-info-vbox {
-    -fx-padding: 10px;
-    -fx-spacing: 10px;
-    -fx-alignment: center;
-    -fx-background-color: rgba(0, 0, 0, 0.5); /* Add a semi-transparent background */
-    -fx-background-radius: 10px; /* Add rounded corners */
-}
-
-.location-input {
-    -fx-text-fill: black; /* ensures search box text is visible */
-}
-
-.unit-combo-box{
-    -fx-text-fill: black;
-}
-
-.forecast-label{
-    -fx-text-fill: black; /* change from white to black for results box */
-}
-
-.location-label {
-    -fx-text-fill: white; /* switch to white if background is black */
-    -fx-font-size: 16px;
-}
-
-## 'pom.xml'
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.example</groupId>
-    <artifactId>weatherapp</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging> <!-- Make sure packaging is JAR -->
-
-    <properties>
-        <maven.compiler.source>24</maven.compiler.source>
-        <maven.compiler.target>24</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javafx.version>24</javafx.version>
-    </properties>
-
-    <dependencies>
-        <!-- JavaFX Dependencies -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>${javafx.version}</version>
-            <classifier>win</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>${javafx.version}</version>
-            <classifier>linux</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>${javafx.version}</version>
-            <classifier>mac</classifier>
-        </dependency>
-
-        <!-- Apache HttpClient 5 -->
-        <dependency>
-            <groupId>org.apache.httpcomponents.client5</groupId>
-            <artifactId>httpclient5</artifactId>
-            <version>5.2.1</version>
-        </dependency>
-
-        <!-- JSON -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20231013</version>
-        </dependency>
-
-        <!-- Gson -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.10.1</version>
-        </dependency>
-
-        <!-- SLF4J Logback (Optional) -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.4.14</version>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-                <configuration>
-                    <source>24</source>
-                    <target>24</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <configuration>
-                    <mainClass>com.example.weatherapp.WeatherApp</mainClass>
-                    <vmArgs>
-                        <vmArg>--enable-native-access=javafx.graphics</vmArg>
-                    </vmArgs>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-</project>
-```
